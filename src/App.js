@@ -14,6 +14,7 @@ import appConfig from './config.json'
 import pkg from '../package.json'
 import ErrorMessage from './ErrorMessage'
 import './App.css'
+import CustomPolicy from './lib/CustomPolicy';
 
 const socket = openSocket(HOST)
 
@@ -231,6 +232,12 @@ class App extends Component {
       )
 
       Promise.all(promises).then(([config, policy, instructions]) => {
+        let customPolicy = new CustomPolicy();
+        if(customPolicy.hasCustomPolicy()) {
+          policy = customPolicy.getPolicy();
+        } else {
+          console.log("No custom policy mounted, using default configuration");
+        }
         this.setState({ config, policy, instructions }, () => {
           if (!this.state.scanIsRunning) {
             this.scan()
