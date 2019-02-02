@@ -63,13 +63,24 @@ export default class ChangePolicy extends Component {
             />
         });
 
+        let { strings } = this.props;
+
         return (
             <div ref={r => this.ref = r} className="panel change-policy">
                 <ActionIcon onClick={this.hide.bind(this)} name="close" color="black" />
-                <h4>Change Your Scan Profile</h4>
-                <p>Enter the 4-digit profile code below</p>
+                <h4>{strings.changeScanProfile}</h4>
+                <p>{strings.enterDigits}</p>
                 <div className="code-container" style={{width: CODE_PLACEHOLDER.length * 82 + "px"}}>
                     {codeBoxes}
+                </div>
+                <div class="clearfix"></div>
+                <div class="change-policy-footer">
+                    <button className="btn btn-default float-left">
+                        {strings.resetPolicyDefaults}
+                    </button>
+                    <button className="btn btn-default pull-right">
+                        {strings.changePolicyButton}
+                    </button>
                 </div>
             </div>
         );

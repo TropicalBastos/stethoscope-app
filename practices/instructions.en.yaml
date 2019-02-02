@@ -13,6 +13,10 @@ strings:
   policyDescription: baseline policy
   rescanButton: rescan
   lastScan: Last scanned by
+  changePolicyButton: Change Profile
+  resetPolicyDefaults: Reset Policy Defaults
+  changeScanProfile: Change Your Scan Profile
+  enterDigits: Enter the 4-digit profile code below
 
 practices:
   firewall:

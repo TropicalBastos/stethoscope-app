@@ -50,6 +50,28 @@
     animation: fadeOut 0.5s;
 }
 
+.clearfix {
+    clear: both;
+}
+
+.change-policy-footer {
+    width: 320px;
+    margin: 0 auto;
+    display: block;
+}
+
+.change-policy-footer button {
+    font-size: 12px;
+}
+
+.float-left {
+    float: left;
+}
+
+.pull-right {
+    float: right;
+}
+
 @keyframes fadeIn {
 	from {
 		opacity: 0;

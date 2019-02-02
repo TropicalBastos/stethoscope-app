@@ -327,6 +327,7 @@ class App extends Component {
     let content = null
     let changeProfileElement = (changeProfile) ? 
     <ChangePolicy 
+    strings={instructions.strings}
     toggleChangeProfile={this.toggleChangeProfile.bind(this)} 
     /> : null
 
