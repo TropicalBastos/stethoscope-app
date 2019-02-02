@@ -1,16 +1,25 @@
-import React from 'react';
+import React, { Component } from 'react';
 
-export const CodeBox = (props) => {
-    return (
-        <div className="code-box">
-            <input 
-                data-index={props.key} 
-                onChange={props.change} 
-                type="text"
-                value={props.value} 
-            />
-        </div>
-    )
+export default class CodeBox extends Component {
+    
+    componentDidUpdate() {
+        if(this.props.focusedIndex === this.props.index) {
+            this.ref.focus();
+        }
+    }
+
+    render(){
+        return (
+            <div className="code-box">
+                <input
+                    ref={r => this.ref = r}
+                    data-index={this.props.index} 
+                    onKeyDown={this.props.handleKeyDown} 
+                    onChange={this.props.handleChange}
+                    type="text"
+                    value={this.props.value}
+                />
+            </div>
+        );
+    }
 }
-
-export default CodeBox;

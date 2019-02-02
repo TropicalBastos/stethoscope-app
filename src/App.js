@@ -103,10 +103,7 @@ class App extends Component {
     })
     // trigger scan profile change context
     ipcRenderer.on('toggle:changeprofile', (event, showContext) => {
-      this.setState({ 
-        changeProfile: showContext,
-        overlay: showContext
-      })
+      this.toggleChangeProfile(showContext)
     })
     // the server emits this event when a remote scan begins
     socket.on('scan:init', this.onScanInit)
@@ -300,6 +297,13 @@ class App extends Component {
     })
   }
 
+  toggleChangeProfile = (showContext) => {
+    this.setState({ 
+      changeProfile: showContext,
+      overlay: showContext
+    })
+  }
+
   getRecentLogs = () => {
     const today = moment().format('YYYY-MM-DD')
     const path = `${logPath}/dev-application-${today}.log`
@@ -321,7 +325,10 @@ class App extends Component {
     const isDev = process.env.NODE_ENV === 'development'
 
     let content = null
-    let changeProfileElement = (changeProfile) ? <ChangePolicy /> : null
+    let changeProfileElement = (changeProfile) ? 
+    <ChangePolicy 
+    toggleChangeProfile={this.toggleChangeProfile.bind(this)} 
+    /> : null
 
     // don't want to render entire app, partition device info, etc. if downloading an update
     if (downloadProgress !== null) {

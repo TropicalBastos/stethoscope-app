@@ -19,7 +19,7 @@ export default class ActionIcon extends Component {
 
   render () {
     return (
-      <span className='action-icon' title={this.props.title}>
+      <span onClick={this.props.onClick || null} className='action-icon' title={this.props.title}>
         {this.icons[this.props.name]}
       </span>
     )

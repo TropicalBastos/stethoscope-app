@@ -10,31 +10,62 @@ export default class ChangePolicy extends Component {
     constructor() {
         super();
         this.state = {
-            code: CODE_PLACEHOLDER
+            code: CODE_PLACEHOLDER,
+            focusedIndex: null
         };
-        this.change = this.change.bind(this);
+        this.handleChange = this.handleChange.bind(this);
+        this.handleKeyDown = this.handleKeyDown.bind(this);
     }
 
-    change(e) {
+    handleKeyDown(e) {
+        let el = e.target;
+        let index = el.getAttribute('data-index');
+        let focusedIndex = parseInt(index);
+        if(e.keyCode != 8 && el.value.length === 1) {
+            focusedIndex = focusedIndex + 1;
+        } else if(e.keyCode === 8 && el.value.length === 0) {
+            focusedIndex = focusedIndex - 1;
+        }
+        this.setState({
+            focusedIndex
+        });
+    }
+
+    handleChange(e) {
         let { code } = this.state;
-        code[e.target.getAttribute('data-index')] = e.target.value;
+        let el = e.target;
+        let index = el.getAttribute('data-index');
+        if(el.value.length > 1) {
+            return;
+        }
+        code[index] = el.value;
         this.setState({
             code
         });
+    }
+
+    hide() {
+        this.ref.classList.add('fadeOut');
+        setTimeout(() => {
+            this.props.toggleChangeProfile(false);
+        }, 500);
     }
 
     render() {
         let codeBoxes = CODE_PLACEHOLDER.map((item, index) => {
             return <CodeBox 
                 value={this.state.code[index]} 
-                key={index} 
-                change={this.change} 
+                key={index}
+                index={index} 
+                handleKeyDown={this.handleKeyDown}
+                handleChange={this.handleChange}
+                focusedIndex={this.state.focusedIndex}
             />
         });
 
         return (
-            <div className="panel change-policy">
-                <ActionIcon name="close" color="black" />
+            <div ref={r => this.ref = r} className="panel change-policy">
+                <ActionIcon onClick={this.hide.bind(this)} name="close" color="black" />
                 <h4>Change Your Scan Profile</h4>
                 <p>Enter the 4-digit profile code below</p>
                 <div className="code-container" style={{width: CODE_PLACEHOLDER.length * 82 + "px"}}>
