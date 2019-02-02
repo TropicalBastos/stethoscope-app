@@ -1,4 +1,4 @@
-const { Menu, shell } = require('electron')
+const { Menu, shell, ipcMain, BrowserWindow } = require('electron')
 const pkg = require('../package.json')
 const config = require('./config.json')
 const AutoLauncher = require('./AutoLauncher')
@@ -7,6 +7,11 @@ const toggleAutoLaunchMenus = (autoLaunchOn) => {
   let autoLaunchMenuOptions = Menu.getApplicationMenu().getMenuItemById('autolaunch').submenu
   autoLaunchMenuOptions.getMenuItemById('autolaunchOn').checked = autoLaunchOn
   autoLaunchMenuOptions.getMenuItemById('autolaunchOff').checked = !autoLaunchOn
+}
+
+const showChangeScanProfile = () => {
+  let window = BrowserWindow.getFocusedWindow();
+  window.webContents.send('toggle:changeprofile', true);
 }
 
 module.exports = function (mainWindow, app, focusOrCreateWindow, updater, log) {
@@ -26,6 +31,17 @@ module.exports = function (mainWindow, app, focusOrCreateWindow, updater, log) {
           accelerator: 'CmdOrCtrl+N',
           click () {
             focusOrCreateWindow()
+          }
+        }
+      ]
+    },
+    {
+      label: 'Options',
+      submenu: [
+        {
+          label: 'Change Scan Profile',
+          click () {
+            showChangeScanProfile()
           }
         }
       ]
