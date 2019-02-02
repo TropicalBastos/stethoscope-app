@@ -1,0 +1,58 @@
+.change-policy {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    animation: fadeIn 1s;
+    border-bottom: solid 1px gray;
+    background: #f3f2f2;
+    padding-top: 12px;
+    padding: 12px 0;
+}
+
+.change-policy h4, .change-policy p {
+    text-align: center;
+}
+
+.change-policy .action-icon {
+    width: 15px;
+    height: 15px;
+    float: right;
+    margin-right: 30px;
+    cursor: pointer;
+}
+
+.change-policy .code-container {
+    display: block;
+    margin: 0 auto;
+}
+
+.change-policy .code-box {
+    width: 60px;
+    height: 70px;
+    background: white;
+    float: left;
+    margin: 10px;
+    border: solid 1px rgb(209, 209, 209);
+}
+
+.change-policy .code-box input {
+    margin: 0 auto;
+    width: 40px;
+    display: block;
+    margin-top: 6px;
+    height: 50px;
+    font-size: 30px;
+    text-align: center;
+    border: 0;
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+		transform: translate3d(0, -50%, 0);
+	}
+	to {
+		opacity: 1;
+		transform: translate3d(0, 0, 0);
+	}
+}
