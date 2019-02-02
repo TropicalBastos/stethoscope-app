@@ -15,6 +15,7 @@ import pkg from '../package.json'
 import ErrorMessage from './ErrorMessage'
 import './App.css'
 import CustomPolicy from './lib/CustomPolicy';
+import ChangePolicy from './change_policy/ChangePolicy';
 
 const socket = openSocket(HOST)
 
@@ -59,7 +60,10 @@ class App extends Component {
     // progress object from updater process { percent, total, transferred }
     downloadProgress: null,
     // whether rescan button should be highlighted
-    highlightRescan: false
+    highlightRescan: false,
+    // whether the scan profile context should show
+    changeProfile: false,
+    overlay: false
   }
 
   componentWillUnmount () {
@@ -96,6 +100,13 @@ class App extends Component {
           this.loadPractices()
         }
       }
+    })
+    // trigger scan profile change context
+    ipcRenderer.on('toggle:changeprofile', (event, showContext) => {
+      this.setState({ 
+        changeProfile: showContext,
+        overlay: showContext
+      })
     })
     // the server emits this event when a remote scan begins
     socket.on('scan:init', this.onScanInit)
@@ -303,12 +314,14 @@ class App extends Component {
     const {
       device, policy, result, downloadProgress,
       scannedBy, lastScanTime, error,
-      instructions, loading, highlightRescan
+      instructions, loading, highlightRescan, changeProfile,
+      overlay
     } = this.state
 
     const isDev = process.env.NODE_ENV === 'development'
 
     let content = null
+    let changeProfileElement = (changeProfile) ? <ChangePolicy /> : null
 
     // don't want to render entire app, partition device info, etc. if downloading an update
     if (downloadProgress !== null) {
@@ -401,6 +414,8 @@ class App extends Component {
     return (
       <div className={`App ${loading ? 'loading' : ''}`}>
         {content}
+        {overlay ? <div class="overlay"></div> : null}
+        {changeProfileElement}
       </div>
     )
   }
