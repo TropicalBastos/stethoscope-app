@@ -304,6 +304,10 @@ class App extends Component {
     })
   }
 
+  setPolicy = (policy) => {
+    this.setState({ policy });
+  }
+
   getRecentLogs = () => {
     const today = moment().format('YYYY-MM-DD')
     const path = `${logPath}/dev-application-${today}.log`
@@ -327,6 +331,8 @@ class App extends Component {
     let content = null
     let changeProfileElement = (changeProfile) ? 
     <ChangePolicy 
+    scan={this.scan.bind(this)}
+    setPolicy={this.setPolicy.bind(this)}
     strings={instructions.strings}
     toggleChangeProfile={this.toggleChangeProfile.bind(this)} 
     /> : null

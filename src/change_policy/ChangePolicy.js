@@ -72,7 +72,11 @@ export default class ChangePolicy extends Component {
                 dialog.showMessageBox(remote.getCurrentWindow(), {
                     message: 'Your policy configuration has been reset'
                 }, () => {
+                    let originalPolicy = fs.readFileSync(path.join(remote.app.getAppPath(), '/practices/policy.yaml'), 'utf8');
+                    let json = yaml.safeLoad(originalPolicy);
+                    this.props.setPolicy(json);
                     this.hide();
+                    this.props.scan();
                 });
             }
         });
@@ -93,10 +97,12 @@ export default class ChangePolicy extends Component {
                     let json = yaml.safeLoad(result.data);
                     let customPolicy = new CustomPolicy();
                     customPolicy.setPolicy(json);
+                    this.props.setPolicy(json);
                     dialog.showMessageBox(remote.getCurrentWindow(), {
                         message: 'Current policy overwritten'
                     });
                     this.hide();
+                    this.props.scan();
                 } catch(e) {
                     dialog.showMessageBox(remote.getCurrentWindow(), {
                         message: `Could not fetch policy with code ${code}`
