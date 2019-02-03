@@ -3,8 +3,12 @@ import CodeBox from './CodeBox';
 import './ChangePolicy.css';
 import ActionIcon from '../ActionIcon';
 import CustomPolicy from '../lib/CustomPolicy';
+import axios from 'axios';
 
+let fs = window.require('fs');
+let yaml = window.require('js-yaml');
 let remote = window.require('electron').remote;
+let path = window.require('path');
 let dialog = remote.dialog;
 
 const CODE_PLACEHOLDER = ['', '', '', ''];
@@ -20,6 +24,7 @@ export default class ChangePolicy extends Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleKeyDown = this.handleKeyDown.bind(this);
         this.resetPolicyDefaults = this.resetPolicyDefaults.bind(this);
+        this.changePolicy = this.changePolicy.bind(this);
     }
 
     handleKeyDown(e) {
@@ -73,6 +78,34 @@ export default class ChangePolicy extends Component {
         });
     }
 
+    changePolicy() {
+        let code = parseInt(this.state.code.join(''));
+        dialog.showMessageBox(remote.getCurrentWindow(), {
+            message: `Are you sure you wish to change the current policy configuration with the one from the code ${code}`,
+            buttons: ['Yes', 'No']
+        }, async (response) => {
+            if(response === 0) {
+                let apiHandle = fs.readFileSync(path.join(remote.app.getAppPath(), '/practices/api.yaml'), 'utf8');
+                let apiConfig = yaml.safeLoad(apiHandle);
+                let url = apiConfig.policyChangeRequest;
+                try {
+                    let result = await axios.post(url, { code });
+                    let json = yaml.safeLoad(result.data);
+                    let customPolicy = new CustomPolicy();
+                    customPolicy.setPolicy(json);
+                    dialog.showMessageBox(remote.getCurrentWindow(), {
+                        message: 'Current policy overwritten'
+                    });
+                    this.hide();
+                } catch(e) {
+                    dialog.showMessageBox(remote.getCurrentWindow(), {
+                        message: `Could not fetch policy with code ${code}`
+                    });
+                }
+            }
+        });
+    }
+
     render() {
         let codeBoxes = CODE_PLACEHOLDER.map((item, index) => {
             return <CodeBox 
@@ -100,7 +133,7 @@ export default class ChangePolicy extends Component {
                     <button onClick={this.resetPolicyDefaults} className="btn btn-default float-left">
                         {strings.resetPolicyDefaults}
                     </button>
-                    <button className="btn btn-default pull-right">
+                    <button onClick={this.changePolicy} className="btn btn-default pull-right">
                         {strings.changePolicyButton}
                     </button>
                 </div>
