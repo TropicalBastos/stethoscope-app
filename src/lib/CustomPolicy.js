@@ -21,6 +21,10 @@ class CustomPolicy{
         return this.policy ? true : false;
     }
 
+    deletePolicy() {
+        localStorage.removeItem(STETHOSCOPE_POLICY);
+    }
+
 }
 
 export default CustomPolicy;

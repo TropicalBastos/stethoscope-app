@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 import CodeBox from './CodeBox';
 import './ChangePolicy.css';
 import ActionIcon from '../ActionIcon';
+import CustomPolicy from '../lib/CustomPolicy';
+
+let remote = window.require('electron').remote;
+let dialog = remote.dialog;
 
 const CODE_PLACEHOLDER = ['', '', '', ''];
 
@@ -15,6 +19,7 @@ export default class ChangePolicy extends Component {
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleKeyDown = this.handleKeyDown.bind(this);
+        this.resetPolicyDefaults = this.resetPolicyDefaults.bind(this);
     }
 
     handleKeyDown(e) {
@@ -51,6 +56,23 @@ export default class ChangePolicy extends Component {
         }, 500);
     }
 
+    resetPolicyDefaults() {
+        dialog.showMessageBox(remote.getCurrentWindow(), {
+            message: 'Are you sure you wish to reset your current policy configuration to the system default?',
+            buttons: ['Yes', 'No']
+        }, (response) => {
+            if(response === 0) {
+                let customPolicy = new CustomPolicy();
+                customPolicy.deletePolicy();
+                dialog.showMessageBox(remote.getCurrentWindow(), {
+                    message: 'Your policy configuration has been reset'
+                }, () => {
+                    this.hide();
+                });
+            }
+        });
+    }
+
     render() {
         let codeBoxes = CODE_PLACEHOLDER.map((item, index) => {
             return <CodeBox 
@@ -75,7 +97,7 @@ export default class ChangePolicy extends Component {
                 </div>
                 <div class="clearfix"></div>
                 <div class="change-policy-footer">
-                    <button className="btn btn-default float-left">
+                    <button onClick={this.resetPolicyDefaults} className="btn btn-default float-left">
                         {strings.resetPolicyDefaults}
                     </button>
                     <button className="btn btn-default pull-right">
