@@ -10,7 +10,7 @@ const toggleAutoLaunchMenus = (autoLaunchOn) => {
 }
 
 const showChangeScanProfile = () => {
-  let window = BrowserWindow.getFocusedWindow();
+  let window = BrowserWindow.getAllWindows()[0];
   window.webContents.send('toggle:changeprofile', true);
 }
 
